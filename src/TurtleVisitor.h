@@ -12,7 +12,8 @@ using namespace std;
 
 class TurtleVisitor : public ShellGrammarVisitor{
 public:
-    TurtleVisitor();
+    TurtleVisitor()
+    : workingDirectory(getCwd()){};
 
 public:
     antlrcpp::Any visitStart(ShellGrammarParser::StartContext *context) override;
@@ -31,6 +32,12 @@ public:
 
     virtual ~TurtleVisitor();
 
+    string getCwd();
+
+    antlrcpp::Any visitDerp(ShellGrammarParser::DerpContext *context) override;
+
+private:
+    string workingDirectory;
 
 };
 

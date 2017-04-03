@@ -1,12 +1,14 @@
 grammar ShellGrammar;
 
-start : (buildIns | 'exec' startProgram);
+start : (buildIns | 'exec' startProgram) derp;
 
 buildIns
         : 'ls'                                                              #listWorkingDirectory
         | 'pwd'                                                             #getWorkingDirectory
         | 'cd' newDir=STRING                                                #changeWorkingDirectory
         ;
+
+derp : kabouter='a'* kabouter='b'*;
 
 startProgram
         : (buildIns | program=STRING) (arguments=STRING | iORedirect | programPipedTo)* ('&')? #executeProgram

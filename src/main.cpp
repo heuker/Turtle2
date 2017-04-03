@@ -7,12 +7,15 @@
 #include "TurtleVisitor.h"
 
 int main() {
-    std::cout << "/home/sander $ ";
 
     // Read some line of input....
     std::string input;
 
+    TurtleVisitor* visitor = new TurtleVisitor;
+
     while(std::cin){
+
+        cout << visitor->getCwd() << "$ ";
         getline(cin, input);
 
         // Create input stream, create lexer and use lexer to create stream of tokens
@@ -25,8 +28,7 @@ int main() {
         antlr4::tree::ParseTree *parseTree = parser.start();
 
         // Then, visit your tree
-        TurtleVisitor visitor;
-        visitor.visit(parseTree);
+        visitor->visit(parseTree);
     }
 
     //return
