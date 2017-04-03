@@ -7,23 +7,28 @@
 #include "TurtleVisitor.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    std::cout << "/home/sander $ ";
 
     // Read some line of input....
-    std::string input = "cwd";
+    std::string input;
 
-    // Create input stream, create lexer and use lexer to create stream of tokens
-    antlr4::ANTLRInputStream inputStream(input);
-    ShellGrammarLexer lexer(&inputStream);
-    antlr4::CommonTokenStream tokens(&lexer);
+    while(std::cin){
+        getline(cin, input);
 
-    // Create parser
-    ShellGrammarParser parser(&tokens);
-    antlr4::tree::ParseTree *parseTree = parser.start();
+        // Create input stream, create lexer and use lexer to create stream of tokens
+        antlr4::ANTLRInputStream inputStream(input);
+        ShellGrammarLexer lexer(&inputStream);
+        antlr4::CommonTokenStream tokens(&lexer);
 
-    // Then, visit your tree
-    TurtleVisitor visitor;
-    visitor.visit(parseTree);
+        // Create parser
+        ShellGrammarParser parser(&tokens);
+        antlr4::tree::ParseTree *parseTree = parser.start();
 
+        // Then, visit your tree
+        TurtleVisitor visitor;
+        visitor.visit(parseTree);
+    }
+
+    //return
     return 0;
 }

@@ -31,8 +31,6 @@ public:
 
     virtual ~TurtleVisitor();
 
-private:
-    string workingDirectory = "~";
 
 };
 

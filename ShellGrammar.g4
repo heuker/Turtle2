@@ -1,6 +1,6 @@
 grammar ShellGrammar;
 
-start : (buildIns | startProgram);
+start : (buildIns | 'exec' startProgram);
 
 buildIns
         : 'ls'                                                              #listWorkingDirectory
@@ -13,7 +13,7 @@ startProgram
         ;
 
 iORedirect
-        : ('>' | '>>' | '2>' | '<') fileName=STRING
+        : op=('>' | '>>' | '2>' | '<') fileName=STRING
         ;
 
 programPipedTo
@@ -22,6 +22,6 @@ programPipedTo
 
 
 
-STRING: [A-Za-z0-9.]+;
-WS: [\r\n\t\f ]+ -> skip;
+STRING: [A-Za-z0-9./~]+;
+WS: [\r\t\f ]+ -> skip;
 
