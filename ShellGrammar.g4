@@ -8,8 +8,6 @@ buildIns
         | 'cd' newDir=STRING                                                #changeWorkingDirectory
         ;
 
-derp : kabouter='a'* kabouter='b'*;
-
 startProgram
         : (buildIns | program=STRING) (arguments=STRING | iORedirect | programPipedTo)* ('&')? #executeProgram
         ;
