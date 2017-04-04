@@ -1,10 +1,9 @@
 grammar ShellGrammar;
 
-start : (buildIns | 'exec' startProgram) derp;
+start : (buildIns | startProgram);
 
 buildIns
-        : 'ls'                                                              #listWorkingDirectory
-        | 'pwd'                                                             #getWorkingDirectory
+        : 'pwd'                                                             #getWorkingDirectory
         | 'cd' newDir=STRING                                                #changeWorkingDirectory
         ;
 
@@ -19,7 +18,6 @@ iORedirect
 programPipedTo
         : '|' (buildIns | program=STRING)
         ;
-
 
 
 STRING: [A-Za-z0-9./~]+;

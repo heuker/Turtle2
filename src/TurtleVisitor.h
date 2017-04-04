@@ -18,8 +18,6 @@ public:
 public:
     antlrcpp::Any visitStart(ShellGrammarParser::StartContext *context) override;
 
-    antlrcpp::Any visitListWorkingDirectory(ShellGrammarParser::ListWorkingDirectoryContext *context) override;
-
     antlrcpp::Any visitGetWorkingDirectory(ShellGrammarParser::GetWorkingDirectoryContext *context) override;
 
     antlrcpp::Any visitChangeWorkingDirectory(ShellGrammarParser::ChangeWorkingDirectoryContext *context) override;
@@ -33,8 +31,6 @@ public:
     virtual ~TurtleVisitor();
 
     string getCwd();
-
-    antlrcpp::Any visitDerp(ShellGrammarParser::DerpContext *context) override;
 
 private:
     string workingDirectory;

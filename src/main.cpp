@@ -11,7 +11,7 @@ int main() {
     // Read some line of input....
     std::string input;
 
-    TurtleVisitor* visitor = new TurtleVisitor;
+    TurtleVisitor *visitor = new TurtleVisitor;
 
     while(std::cin){
 
@@ -30,6 +30,8 @@ int main() {
         // Then, visit your tree
         visitor->visit(parseTree);
     }
+
+    delete visitor;
 
     //return
     return 0;

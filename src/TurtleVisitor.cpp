@@ -5,10 +5,11 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <cstring>
+#include <wait.h>
 #include "TurtleVisitor.h"
 
 
-string TurtleVisitor::getCwd(){
+string TurtleVisitor::getCwd() {
     char buff[PATH_MAX];
     getcwd(buff, PATH_MAX);
     string cwd(buff);
@@ -17,12 +18,6 @@ string TurtleVisitor::getCwd(){
 
 antlrcpp::Any TurtleVisitor::visitStart(ShellGrammarParser::StartContext *context) {
     visitChildren(context);
-    return nullptr;
-}
-
-antlrcpp::Any TurtleVisitor::visitListWorkingDirectory(ShellGrammarParser::ListWorkingDirectoryContext *context) {
-    char *argv[] = {"ls",  "-l", NULL};
-    execvp("/bin/ls", argv);
 
     return nullptr;
 }
@@ -36,61 +31,19 @@ antlrcpp::Any TurtleVisitor::visitChangeWorkingDirectory(ShellGrammarParser::Cha
     //get newDir
     string newDir = context->newDir->getText();
 
-    //remove trailing forward slash
-    if (newDir.length() != 1 && newDir.back() == '/') {
-        newDir.pop_back();
-    }
-
     //check if weŕe updating the entire path
     if (newDir[0] == '/' || newDir[0] == '~') {
 
-        //change workingDirectory
-        workingDirectory = newDir;
-
         //change program working directory
-        int res = chdir(workingDirectory.c_str());
+        int res = chdir(newDir.c_str());
 
         //if program working directory could not be changed than reset workingDirectory
-        if (res != 0){
+        if (res != 0) {
             cout << "Whoops! " << strerror(errno) << endl;
-            workingDirectory = getCwd();
         }
-
-        return nullptr;
 
         //if its not a whole path than append new String
     } else {
-        //if we need to go up
-        if (newDir == ".." || newDir == "../") {
-            //check if we're not at the top
-            if (workingDirectory.length() == 1) {
-                cout << "Already in root directory" << endl;
-                return nullptr;
-            }
-
-            //remove directoryName till /
-            while (workingDirectory.back() != '/') {
-                workingDirectory.pop_back();
-            }
-
-            //and remove the /
-            if (workingDirectory.length() != 1) {
-                workingDirectory.pop_back();
-            }
-
-            //change program working directory
-            int res = chdir(workingDirectory.c_str());
-
-            //if program working directory could not be changed than reset workingDirectory
-            if (res != 0){
-                cout << "Whoops! " << strerror(errno) << endl;
-                workingDirectory = getCwd();
-            }
-
-            return nullptr;
-        }
-
-        //append newDir to workingDirectory
         workingDirectory.append("/");
         workingDirectory.append(newDir);
 
@@ -98,30 +51,26 @@ antlrcpp::Any TurtleVisitor::visitChangeWorkingDirectory(ShellGrammarParser::Cha
         int res = chdir(workingDirectory.c_str());
 
         //if program working directory could not be changed than reset workingDirectory
-        if (res != 0){
+        if (res != 0) {
             cout << "Whoops! " << strerror(errno) << endl;
-            workingDirectory = getCwd();
         }
-
-        return nullptr;
     }
 
-}
-
-antlrcpp::Any TurtleVisitor::visitDerp(ShellGrammarParser::DerpContext *context) {
-//    context->kabouter.
+    workingDirectory = getCwd();
     return nullptr;
+
 }
 
 
 antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProgramContext *context) {
-    char *argv[] = {"ls",  "-l", NULL};
-
-    if (context->buildIns() != nullptr) {
-        return nullptr;
+    int returnValues;
+    int cid = fork();
+    if (cid == 0) {
+        char *argv[] = {(char *) context->program->getText().c_str(), NULL};
+        execvp((char *) context->program->getText().c_str(), argv);
+    } else {
+        waitpid(cid, & returnValues , 0);
     }
-
-    execvp(context->program->getText().c_str(), argv);
 
     return nullptr;
 }
