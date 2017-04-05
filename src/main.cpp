@@ -22,25 +22,24 @@ void executee(ProgramExecute* programExecute){
         //make counter
         int i = 0;
 
+        string programName = "";
+
         //transfer all arguments
         for (std::vector<std::string>::iterator it = pArgs.begin(); it != pArgs.end(); ++it) {
             string temp = *it;
+            if(i == 0){
+                programName = temp;
+            }
             cout << "Argument: " << i << " = " << temp << std::endl;
             argv[i] = (char *) temp.c_str();
             ++i;
         }
 
-
         //add NULL to last index of the char array
-        argv[pArgs.size()] = "banaan";
-
-        cout << "Argument: " << pArgs.size() << " = " << argv[pArgs.size()] << std::endl;
-        cout << "Argument: " << 3 << " = " << argv[3] << std::endl;
-
-
+        argv[pArgs.size()] = NULL;
 
         //execute program
-        execvp(argv[0], argv);
+        execvp(programName.c_str(), argv);
     } else {
         waitpid(cid, &returnValues, 0);
     }
