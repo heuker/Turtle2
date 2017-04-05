@@ -5,7 +5,6 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <cstring>
-#include <wait.h>
 #include "TurtleVisitor.h"
 
 
@@ -17,9 +16,11 @@ string TurtleVisitor::getCwd() {
 }
 
 antlrcpp::Any TurtleVisitor::visitStart(ShellGrammarParser::StartContext *context) {
+    model = new Model();
+
     visitChildren(context);
 
-    return nullptr;
+    return model;
 }
 
 antlrcpp::Any TurtleVisitor::visitGetWorkingDirectory(ShellGrammarParser::GetWorkingDirectoryContext *context) {
@@ -37,7 +38,7 @@ antlrcpp::Any TurtleVisitor::visitChangeWorkingDirectory(ShellGrammarParser::Cha
         //change program working directory
         int res = chdir(newDir.c_str());
 
-        //if program working directory could not be changed than reset workingDirectory
+        //if program working directory could not be changed than show the error
         if (res != 0) {
             cout << "Whoops! " << strerror(errno) << endl;
         }
@@ -50,12 +51,13 @@ antlrcpp::Any TurtleVisitor::visitChangeWorkingDirectory(ShellGrammarParser::Cha
         //change program working directory
         int res = chdir(workingDirectory.c_str());
 
-        //if program working directory could not be changed than reset workingDirectory
+        //if program working directory could not be changed than show the error
         if (res != 0) {
             cout << "Whoops! " << strerror(errno) << endl;
         }
     }
 
+    //update workingDirectory
     workingDirectory = getCwd();
     return nullptr;
 
@@ -63,16 +65,25 @@ antlrcpp::Any TurtleVisitor::visitChangeWorkingDirectory(ShellGrammarParser::Cha
 
 
 antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProgramContext *context) {
-    int returnValues;
-    int cid = fork();
-    if (cid == 0) {
-        char *argv[] = {(char *) context->program->getText().c_str(), NULL};
-        execvp((char *) context->program->getText().c_str(), argv);
-    } else {
-        waitpid(cid, & returnValues , 0);
+    vector<string> args;
+    //push programName to the first parameter in argument list
+    args.push_back(context->program->getText());
+
+    vector<ShellGrammarParser::ArgumentContext*> arguments = context->argument();
+
+    //push every parameter to argument list
+    for (vector<ShellGrammarParser::ArgumentContext *>::iterator it = arguments.begin(); it != arguments.end(); ++it) {
+        string arg = visitArgument(*it);
+        args.push_back(arg);
     }
 
+    model->addProgramExecute(new ProgramExecute(args, false, false));
+
     return nullptr;
+}
+
+antlrcpp::Any TurtleVisitor::visitArgument(ShellGrammarParser::ArgumentContext *context) {
+    return context->getText();
 }
 
 antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectContext *context) {
@@ -80,6 +91,7 @@ antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectConte
 }
 
 antlrcpp::Any TurtleVisitor::visitProgramPipedTo(ShellGrammarParser::ProgramPipedToContext *context) {
+    cout << "visited" << endl;
     return nullptr;
 }
 

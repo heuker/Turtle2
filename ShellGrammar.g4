@@ -8,18 +8,21 @@ buildIns
         ;
 
 startProgram
-        : (buildIns | program=STRING) (arguments=STRING | iORedirect | programPipedTo)* ('&')? #executeProgram
+        : program=STRING (argument| iORedirect | programPipedTo)* ('&')? #executeProgram
         ;
+
+argument
+        : STRING;
 
 iORedirect
         : op=('>' | '>>' | '2>' | '<') fileName=STRING
         ;
 
 programPipedTo
-        : '|' (buildIns | program=STRING)
+        : '|' program=STRING
         ;
 
 
-STRING: [A-Za-z0-9./~]+;
+STRING: [A-Za-z0-9./~-]+;
 WS: [\r\t\f ]+ -> skip;
 

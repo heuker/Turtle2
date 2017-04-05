@@ -2,9 +2,43 @@
 #include <ANTLRInputStream.h>
 #include <CommonTokenStream.h>
 #include <tree/ParseTree.h>
+#include <unistd.h>
+#include <wait.h>
+#include <vector>
 #include "../gen/ShellGrammarLexer.h"
 #include "../gen/ShellGrammarParser.h"
 #include "TurtleVisitor.h"
+
+void executee(ProgramExecute* programExecute){
+    int returnValues;
+    int cid = fork();
+    if (cid == 0) {
+        //get arguments
+        std::vector<std::string> pArgs = programExecute->getArgs();
+
+        //make new char array
+        char *argv[pArgs.size() + 1];
+
+        //make counter
+        int i = 0;
+
+        //transfer all arguments
+        for (std::vector<std::string>::iterator it = pArgs.begin(); it != pArgs.end(); ++it) {
+            string temp = *it;
+            cout << "Argument: " << i << " = " << temp << std::endl;
+            argv[i] = (char *) temp.c_str();
+            ++i;
+        }
+
+        //add NULL to last index of the char array
+        argv[pArgs.size()] = NULL;
+
+        //execute program
+        execvp("ls", argv);
+    } else {
+        waitpid(cid, &returnValues, 0);
+    }
+}
 
 int main() {
 
@@ -14,7 +48,6 @@ int main() {
     TurtleVisitor *visitor = new TurtleVisitor;
 
     while(std::cin){
-
         cout << visitor->getCwd() << "$ ";
         getline(cin, input);
 
@@ -28,7 +61,14 @@ int main() {
         antlr4::tree::ParseTree *parseTree = parser.start();
 
         // Then, visit your tree
-        visitor->visit(parseTree);
+        Model* model = visitor->visit(parseTree);
+
+        if (!model->getProgramExecutes().empty()) {
+            executee(model->getProgramExecutes().back());
+        }
+
+        //delete model
+        delete model;
     }
 
     delete visitor;
@@ -36,3 +76,4 @@ int main() {
     //return
     return 0;
 }
+
