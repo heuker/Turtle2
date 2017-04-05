@@ -30,11 +30,17 @@ void executee(ProgramExecute* programExecute){
             ++i;
         }
 
+
         //add NULL to last index of the char array
-        argv[pArgs.size()] = NULL;
+        argv[pArgs.size()] = "banaan";
+
+        cout << "Argument: " << pArgs.size() << " = " << argv[pArgs.size()] << std::endl;
+        cout << "Argument: " << 3 << " = " << argv[3] << std::endl;
+
+
 
         //execute program
-        execvp("ls", argv);
+        execvp(argv[0], argv);
     } else {
         waitpid(cid, &returnValues, 0);
     }
