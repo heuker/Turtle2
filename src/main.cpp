@@ -22,15 +22,10 @@ void executee(ProgramExecute* programExecute){
         //make counter
         int i = 0;
 
-        string programName = "";
-
         //transfer all arguments
         for (std::vector<std::string>::iterator it = pArgs.begin(); it != pArgs.end(); ++it) {
             string temp = *it;
-            if(i == 0){
-                programName = temp;
-            }
-            cout << "Argument: " << i << " = " << temp << std::endl;
+
             argv[i] = (char *) temp.c_str();
             ++i;
         }
@@ -39,7 +34,7 @@ void executee(ProgramExecute* programExecute){
         argv[pArgs.size()] = NULL;
 
         //execute program
-        execvp(programName.c_str(), argv);
+        execvp( (* pArgs.begin()).c_str(), argv);
     } else {
         waitpid(cid, &returnValues, 0);
     }
