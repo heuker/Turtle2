@@ -7,36 +7,52 @@
 
 #include <string>
 #include <vector>
+#include "Pipe.h"
 
 class ProgramExecute {
 public:
-    ProgramExecute(std::vector<std::string> args, bool pipedTo, bool pipedFrom)
-    {
-        this->args = args;
-        this->pipedTo = pipedTo;
-        this->pipedFrom = pipedFrom;
-    }
+    ProgramExecute(const std::vector<std::string> &args, Pipe *pipe, const std::string &inputRedirect,
+                   const std::string &outputRedirect, const std::string &errorRedirect) : args(args), pipe(pipe),
+                                                                                          inputRedirect(inputRedirect),
+                                                                                          outputRedirect(
+                                                                                                  outputRedirect),
+                                                                                          errorRedirect(
+                                                                                                  errorRedirect) {}
 
     //defaul destructor
-    ~ProgramExecute(){
+    ~ProgramExecute() {
     }
+
+    void execute();
 
     const std::vector<std::string> &getArgs() const {
         return args;
     }
 
-    bool isPipedTo() const {
-        return pipedTo;
+    Pipe *getPipe() const {
+        return pipe;
     }
 
-    bool isPipedFrom() const {
-        return pipedFrom;
+    const std::string &getInputRedirect() const {
+        return inputRedirect;
+    }
+
+    const std::string &getOutputRedirect() const {
+        return outputRedirect;
+    }
+
+    const std::string &getErrorRedirect() const {
+        return errorRedirect;
     }
 
 private:
     std::vector<std::string> args;
-    bool pipedTo = false;
-    bool pipedFrom = false;
+    Pipe* pipe;
+
+    std::string inputRedirect;
+    std::string outputRedirect;
+    std::string errorRedirect;
+
 };
 
 

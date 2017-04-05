@@ -8,7 +8,7 @@ buildIns
         ;
 
 startProgram
-        : program=STRING (argument| iORedirect | programPipedTo)* ('&')? #executeProgram
+        : program=STRING (argument| iORedirect | '|' startProgram)* ('&')? #executeProgram
         ;
 
 argument
@@ -16,10 +16,6 @@ argument
 
 iORedirect
         : op=('>' | '>>' | '2>' | '<') fileName=STRING
-        ;
-
-programPipedTo
-        : '|' program=STRING
         ;
 
 

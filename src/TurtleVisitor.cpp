@@ -77,7 +77,7 @@ antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProg
         args.push_back(arg);
     }
 
-    model->addProgramExecute(new ProgramExecute(args, false, false));
+    model->addProgramExecute(new ProgramExecute(args, nullptr, "", "", ""));
 
     return nullptr;
 }

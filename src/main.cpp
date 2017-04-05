@@ -9,37 +9,6 @@
 #include "../gen/ShellGrammarParser.h"
 #include "TurtleVisitor.h"
 
-void executee(ProgramExecute* programExecute){
-    int returnValues;
-    int cid = fork();
-    if (cid == 0) {
-        //get arguments
-        std::vector<std::string> pArgs = programExecute->getArgs();
-
-        //make new char array
-        char *argv[pArgs.size() + 1];
-
-        //make counter
-        int i = 0;
-
-        //transfer all arguments
-        for (std::vector<std::string>::iterator it = pArgs.begin(); it != pArgs.end(); ++it) {
-            string temp = *it;
-
-            argv[i] = (char *) temp.c_str();
-            ++i;
-        }
-
-        //add NULL to last index of the char array
-        argv[pArgs.size()] = NULL;
-
-        //execute program
-        execvp( (* pArgs.begin()).c_str(), argv);
-    } else {
-        waitpid(cid, &returnValues, 0);
-    }
-}
-
 int main() {
 
     // Read some line of input....
@@ -63,8 +32,11 @@ int main() {
         // Then, visit your tree
         Model* model = visitor->visit(parseTree);
 
-        if (!model->getProgramExecutes().empty()) {
-            executee(model->getProgramExecutes().back());
+        std::vector<ProgramExecute*> commands = model->getProgramExecutes();
+
+        for (std::vector<ProgramExecute*>::iterator it= commands.begin(); it != commands.end() ; ++it) {
+            ProgramExecute* p = *it;
+            p->execute();
         }
 
         //delete model
