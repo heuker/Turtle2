@@ -23,6 +23,6 @@ programPipedTo
         ;
 
 
-STRING: [A-Za-z0-9./~-]+;
+STRING: ~[\r\t\f ]+;
 WS: [\r\t\f ]+ -> skip;
 
