@@ -7,6 +7,7 @@
 
 
 #include "../gen/ShellGrammarVisitor.h"
+#include "Model.h"
 
 using namespace std;
 
@@ -14,6 +15,9 @@ class TurtleVisitor : public ShellGrammarVisitor{
 public:
     TurtleVisitor()
     : workingDirectory(getCwd()){};
+
+private:
+    Model* model;
 
 public:
     antlrcpp::Any visitStart(ShellGrammarParser::StartContext *context) override;
@@ -31,6 +35,8 @@ public:
     virtual ~TurtleVisitor();
 
     string getCwd();
+
+    antlrcpp::Any visitArgument(ShellGrammarParser::ArgumentContext *context) override;
 
 private:
     string workingDirectory;

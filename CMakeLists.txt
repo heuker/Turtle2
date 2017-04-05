@@ -306,7 +306,7 @@ set(SOURCE_FILES
 
     src/main.cpp
 
-        src/TurtleVisitor.cpp src/TurtleVisitor.h)
+        src/TurtleVisitor.cpp src/TurtleVisitor.h src/Model.cpp src/Model.h src/ProgramExecute.cpp src/ProgramExecute.h)
 
 include_directories(
         runtime/src
