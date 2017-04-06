@@ -7,20 +7,20 @@
 
 
 #include <vector>
-//#include "ProgramExecute.h"
+class ProgramExecute;
 
 class Pipe {
 private:
-//    std::vector<ProgramExecute*> commands;
+    std::vector<ProgramExecute*> commands;
 
 public:
-//    Pipe(std::vector<ProgramExecute*> commands){
-//        this->commands = commands;
-//    }
-//
-//    const std::vector<ProgramExecute*> &getCommands() const {
-//        return commands;
-//    }
+    Pipe(std::vector<ProgramExecute*> commands){
+        this->commands = commands;
+    }
+
+    const std::vector<ProgramExecute*> &getCommands() const {
+        return commands;
+    }
 };
 
 
