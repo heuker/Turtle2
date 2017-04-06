@@ -90,10 +90,6 @@ antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectConte
     return nullptr;
 }
 
-antlrcpp::Any TurtleVisitor::visitProgramPipedTo(ShellGrammarParser::ProgramPipedToContext *context) {
-    cout << "visited" << endl;
-    return nullptr;
-}
 
 TurtleVisitor::~TurtleVisitor() {
 

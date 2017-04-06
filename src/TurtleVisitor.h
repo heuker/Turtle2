@@ -30,8 +30,6 @@ public:
 
     antlrcpp::Any visitIORedirect(ShellGrammarParser::IORedirectContext *context) override;
 
-    antlrcpp::Any visitProgramPipedTo(ShellGrammarParser::ProgramPipedToContext *context) override;
-
     virtual ~TurtleVisitor();
 
     string getCwd();
