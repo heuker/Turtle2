@@ -29,10 +29,13 @@ private:
     std::vector<ProgramExecute*> programExecutes;
 
 public:
-    void addProgramExecute(ProgramExecute* programExecute);
+    void addProgramExecute(ProgramExecute* programExecute){
+        programExecutes.push_back(programExecute);
+    };
 
-    const std::vector<ProgramExecute*> &getProgramExecutes() const;
-
+    const std::vector<ProgramExecute*> &getProgramExecutes() const{
+        return programExecutes;
+    };
 
 };
 

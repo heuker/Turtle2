@@ -90,7 +90,6 @@ antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectConte
     return nullptr;
 }
 
-
 TurtleVisitor::~TurtleVisitor() {
 
 }

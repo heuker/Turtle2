@@ -12,16 +12,12 @@
 class ProgramExecute {
 public:
     ProgramExecute(const std::vector<std::string> &args, Pipe *pipe, const std::string &inputRedirect,
-                   const std::string &outputRedirect, const std::string &errorRedirect) : args(args), pipe(pipe),
-                                                                                          inputRedirect(inputRedirect),
-                                                                                          outputRedirect(
-                                                                                                  outputRedirect),
-                                                                                          errorRedirect(
-                                                                                                  errorRedirect) {}
+                   const std::string &outputRedirect, const std::string &errorRedirect)
+            : args(args), pipe(pipe), inputRedirect(inputRedirect), outputRedirect(outputRedirect),
+              errorRedirect(errorRedirect) {}
 
-    //defaul destructor
-    ~ProgramExecute() {
-    }
+    //default destructor
+    ~ProgramExecute() {}
 
     void execute();
 
