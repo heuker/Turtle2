@@ -7,20 +7,21 @@
 
 
 #include <vector>
+#include <unistd.h>
+
 class ProgramExecute;
 
 class Pipe {
-private:
-    std::vector<ProgramExecute*> commands;
-
-public:
-    Pipe(std::vector<ProgramExecute*> commands){
-        this->commands = commands;
-    }
-
-    const std::vector<ProgramExecute*> &getCommands() const {
-        return commands;
-    }
+//private:
+//    int p[2];
+//
+//
+//public:
+//    Pipe() : pipe(p) {}
+//
+//    const int *getP() const {
+//        return p;
+//    }
 };
 
 

@@ -77,6 +77,11 @@ antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProg
         args.push_back(arg);
     }
 
+    int p[2];
+    pipe(p);
+
+    cout << p[1] << " " << p[2] << endl;
+
     model->addProgramExecute(new ProgramExecute(args, nullptr, "", "", ""));
 
     return nullptr;

@@ -11,9 +11,9 @@
 
 class ProgramExecute {
 public:
-    ProgramExecute(const std::vector<std::string> &args, Pipe *pipe, const std::string &inputRedirect,
+    ProgramExecute(const std::vector<std::string> &args, const std::string &inputRedirect,
                    const std::string &outputRedirect, const std::string &errorRedirect)
-            : args(args), pipe(pipe), inputRedirect(inputRedirect), outputRedirect(outputRedirect),
+            : args(args), inputRedirect(inputRedirect), outputRedirect(outputRedirect),
               errorRedirect(errorRedirect) {}
 
     //default destructor
@@ -25,9 +25,9 @@ public:
         return args;
     }
 
-    Pipe *getPipe() const {
-        return pipe;
-    }
+//    Pipe *getPipe() const {
+//        return pipe;
+//    }
 
     const std::string &getInputRedirect() const {
         return inputRedirect;
@@ -43,7 +43,8 @@ public:
 
 private:
     std::vector<std::string> args;
-    Pipe* pipe;
+//    Pipe* pipe;
+//    int links
 
     std::string inputRedirect;
     std::string outputRedirect;
