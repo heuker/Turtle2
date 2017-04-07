@@ -33,44 +33,30 @@ void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
 
         //if we're piping output
         if (inputPipe != 0) {
-//            int t[2];
-//            pipe(t);
-//            std::cout << "foute0: " << t[0] << "foute1: " << t[1] << std::endl;
-//            std::cout << "pipe not null" << std::endl;
-//            std::cout << "inputPipe: " << inputPipe << std::endl;
-//            std::cout << "outputPipe: " << outputPipe << std::endl;
             dup2(outputPipe, 1);
-//            std::cout << "test1" << std::endl;
             close(inputPipe);
-//            std::cout << "test2" << std::endl;
             close(outputPipe);
-//            std::cout << "test3" << std::endl;
         }
 
-//        std::cout << "test" << std::endl;
 
         //if we're piping input
         if (prevInputPipe != 0) {
-//            std::cout << "prev pipe not null" << std::endl;
             dup2(prevInputPipe, 0);
             close(prevInputPipe);
             close(prevOutputPipe);
 
         }
 
-//        std::cout << "testtest" << std::endl;
-
         //execute program
         execvp((*pArgs.begin()).c_str(), argv);
     } else { //parent
         if (inputPipe == 0) {
-            waitpid(cid, &returnValues, 0);
+            if (!inBackGround) {
+                waitpid(0, &returnValues, 0);
+            }
         }
     }
 }
-
-ProgramExecute::ProgramExecute(const std::vector<std::string> &args, int inputPipe, int outputPipe, const std::string &inputRedirect, const std::string &outputRedirect, const std::string &errorRedirect)
-        : args(args), inputPipe(inputPipe), outputPipe(outputPipe), inputRedirect(inputRedirect), outputRedirect(outputRedirect), errorRedirect(errorRedirect) {}
 
 int ProgramExecute::getInputPipe() const {
     return inputPipe;
@@ -79,3 +65,8 @@ int ProgramExecute::getInputPipe() const {
 int ProgramExecute::getOutputPipe() const {
     return outputPipe;
 }
+
+ProgramExecute::ProgramExecute(const std::vector<std::string> &args, bool inBackGround, int inputPipe, int outputPipe,
+                               const std::string &inputRedirect, const std::string &outputRedirect,
+                               const std::string &errorRedirect)
+        : args(args), inBackGround(inBackGround), inputPipe(inputPipe), outputPipe(outputPipe), inputRedirect(inputRedirect), outputRedirect(outputRedirect), errorRedirect(errorRedirect) {}

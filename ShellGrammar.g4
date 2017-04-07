@@ -1,6 +1,6 @@
 grammar ShellGrammar;
 
-start : (buildIns | startProgram);
+start : (buildIns | startProgram)?;
 
 buildIns
         : 'pwd'                                                             #getWorkingDirectory
@@ -8,7 +8,7 @@ buildIns
         ;
 
 startProgram
-        : program=STRING (argument| iORedirect | '|' startProgram)* ('&')? #executeProgram
+        : program=STRING (argument| iORedirect | '|' startProgram (background='&')? )*  #executeProgram
         ;
 
 argument

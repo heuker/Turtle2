@@ -14,7 +14,7 @@ using namespace std;
 class TurtleVisitor : public ShellGrammarVisitor{
 public:
     TurtleVisitor()
-    : workingDirectory(getCwd()){};
+    : workingDirectory(getCwd()), inBackground(false){};
 
 private:
     Model* model;
@@ -39,6 +39,7 @@ public:
 private:
     string workingDirectory;
 
+    bool inBackground;
 };
 
 

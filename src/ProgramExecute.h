@@ -11,7 +11,7 @@
 
 class ProgramExecute {
 public:
-    ProgramExecute(const std::vector<std::string> &args, int inputPipe, int outputPipe,
+    ProgramExecute(const std::vector<std::string> &args, bool inBackGround, int inputPipe, int outputPipe,
                    const std::string &inputRedirect, const std::string &outputRedirect,
                    const std::string &errorRedirect);
 
@@ -24,9 +24,6 @@ public:
         return args;
     }
 
-//    Pipe *getPipe() const {
-//        return pipe;
-//    }
     int getInputPipe() const;
 
     int getOutputPipe() const;
@@ -45,7 +42,9 @@ public:
 
 private:
     std::vector<std::string> args;
-//    Pipe* pipe;
+
+    bool inBackGround;
+
     int inputPipe;
     int outputPipe;
 
