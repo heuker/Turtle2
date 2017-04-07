@@ -16,7 +16,7 @@ int main() {
 
     TurtleVisitor *visitor = new TurtleVisitor;
 
-    while(std::cin){
+    while (std::cin) {
         cout << visitor->getCwd() << "$ ";
         getline(cin, input);
 
@@ -30,13 +30,19 @@ int main() {
         antlr4::tree::ParseTree *parseTree = parser.start();
 
         // Then, visit your tree
-        Model* model = visitor->visit(parseTree);
+        Model *model = visitor->visit(parseTree);
 
-        std::vector<ProgramExecute*> commands = model->getProgramExecutes();
+        std::vector<ProgramExecute *> commands = model->getProgramExecutes();
 
-        for (std::vector<ProgramExecute*>::iterator it= commands.begin(); it != commands.end() ; ++it) {
-            ProgramExecute* p = *it;
-            p->execute();
+        int prevIn = 0;
+        int prevOut = 0;
+
+        for (std::vector<ProgramExecute *>::iterator it = commands.begin(); it != commands.end(); ++it) {
+            ProgramExecute *p = *it;
+            p->execute(prevIn, prevOut);
+
+            prevIn = p->getInputPipe();
+            prevOut = p->getOutputPipe();
         }
 
         //delete model

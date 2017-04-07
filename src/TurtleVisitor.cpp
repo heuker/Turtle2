@@ -77,13 +77,19 @@ antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProg
         args.push_back(arg);
     }
 
-    int p[2];
-    pipe(p);
+    //see wheter we have to make a pipe or not
+    if (context->startProgram().size() != 0){
+        cout << "with pipes" << endl;
+        int p[2];
+        pipe(p);
+        model->addProgramExecute(new ProgramExecute(args, p[0], p[1], "", "", ""));
+    } else {
+        cout << "without pipes" << endl;
+        model->addProgramExecute(new ProgramExecute(args, 0, 0, "", "", ""));
+    }
 
-    cout << p[1] << " " << p[2] << endl;
-
-    model->addProgramExecute(new ProgramExecute(args, nullptr, "", "", ""));
-
+    //visit children
+    visitChildren(context);
     return nullptr;
 }
 

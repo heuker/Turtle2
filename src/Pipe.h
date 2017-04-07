@@ -12,16 +12,22 @@
 class ProgramExecute;
 
 class Pipe {
-//private:
-//    int p[2];
-//
-//
-//public:
-//    Pipe() : pipe(p) {}
-//
-//    const int *getP() const {
-//        return p;
-//    }
+private:
+    int p[2];
+
+
+public:
+    Pipe(){
+        pipe(p);
+    }
+
+    const int getInput() const {
+        return p[0];
+    }
+
+    const int getOutput() const {
+        return p[1];
+    }
 };
 
 
