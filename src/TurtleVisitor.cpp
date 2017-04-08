@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <cstring>
+#include <fcntl.h>
 #include "TurtleVisitor.h"
 
 /**
@@ -65,7 +66,6 @@ antlrcpp::Any TurtleVisitor::visitChangeWorkingDirectory(ShellGrammarParser::Cha
     return nullptr;
 }
 
-
 antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProgramContext *context) {
     vector<string> args;
     //push programName to the first parameter in argument list
@@ -101,6 +101,24 @@ antlrcpp::Any TurtleVisitor::visitArgument(ShellGrammarParser::ArgumentContext *
 }
 
 antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectContext *context) {
+    const string op = context->op->getText();
+    const string filename = context->fileName->getText();
+    int fileDescriptor;
+
+    if (op == ">")
+    {
+        fileDescriptor = open((const char *) filename[0], O_WRONLY);
+    } else if (op == ">>")
+    {
+        fileDescriptor = open((const char *) filename[0], O_WRONLY);
+    } else if (op == "2>")
+    {
+        fileDescriptor = open((const char *) filename[0], O_APPEND);
+    } else if (op == "<")
+    {
+        fileDescriptor = open((const char *) filename[0], O_RDONLY);
+    }
+
     return nullptr;
 }
 
