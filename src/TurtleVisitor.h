@@ -26,7 +26,7 @@ public:
 
     antlrcpp::Any visitChangeWorkingDirectory(ShellGrammarParser::ChangeWorkingDirectoryContext *context) override;
 
-    antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramContext *context)
+    antlrcpp::Any visitStartProgram(ShellGrammarParser::StartProgramContext *context) override;
 
     antlrcpp::Any visitIORedirect(ShellGrammarParser::IORedirectContext *context) override;
 

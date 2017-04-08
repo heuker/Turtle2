@@ -80,22 +80,44 @@ antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramC
     }
 
     //todo visit IoRedirect here
+    int input = 0, output = 0, err = 0;
+    pair<string,int> pair;
+    vector<ShellGrammarParser::IORedirectContext *> ioRedirectVector = context->iORedirect();
+    for (vector<ShellGrammarParser::IORedirectContext *>::iterator it = ioRedirectVector.begin();
+            it != ioRedirectVector.end(); ++it)
+    {
+        pair = visitIORedirect(*it);
+
+        if (pair.first == ">" || pair.first == ">>")
+        {
+            cout << pair.second << endl;
+            output = pair.second;
+        } else if (pair.first == "2>")
+        {
+            err = pair.second;
+        } else if (pair.first == "<")
+        {
+            input = pair.second;
+        }
+    }
 
     //see wheter we have to make a pipe or not
     if (context->startProgram().size() != 0){
         int p[2];
         pipe(p);
-        model->addProgramExecute(new ProgramExecute(args, inBackground, p[0], p[1], 0, 0, 0));
+        model->addProgramExecute(new ProgramExecute(args, inBackground, p[0], p[1], input, output, err));
     } else {
-        model->addProgramExecute(new ProgramExecute(args, inBackground, 0, 0, 0, 0, 0));
+        model->addProgramExecute(new ProgramExecute(args, inBackground, 0, 0, input, output, err));
     }
+    cout << output;
 
     //change inBackground
     inBackground = context->background != nullptr;
 
     //visit programs piped to
-    for (vector<ShellGrammarParser::StartProgramContext *>::iterator it = context->startProgram().begin();
-         it != context->startProgram().end(); ++it)
+    vector<ShellGrammarParser::StartProgramContext *> startProgramVector = context->startProgram();
+    for (vector<ShellGrammarParser::StartProgramContext *>::iterator it = startProgramVector.begin();
+         it != startProgramVector.end(); ++it)
     {
         visitStartProgram(*it);
     }
@@ -113,16 +135,16 @@ antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectConte
 
     if (op == ">")
     {
-        returnPair = make_pair<string,int>(context->op->getText(), open(&filename[0], O_WRONLY));
+        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC));
     } else if (op == ">>")
     {
-        returnPair = make_pair<string,int>(context->op->getText(), open(&filename[0], O_WRONLY));
+        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_APPEND | O_CREAT));
     } else if (op == "2>")
     {
-        returnPair = make_pair<string,int>(context->op->getText(), open(&filename[0], O_APPEND));
+        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC));
     } else if (op == "<")
     {
-        returnPair = make_pair<string,int>(context->op->getText(), open(&filename[0], O_RDONLY));
+        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_RDONLY));
     }
 
     return returnPair;
