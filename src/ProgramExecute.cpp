@@ -22,8 +22,6 @@ void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
 
         //transfer all arguments
         for (std::vector<std::string>::iterator it = pArgs.begin(); it != pArgs.end(); ++it) {
-//            std::string temp = *it; todo remove
-
             argv[i] = (char *) (*it).c_str();
             ++i;
         }
@@ -36,6 +34,12 @@ void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
             dup2(outputPipe, 1);
             close(inputPipe);
             close(outputPipe);
+
+            //if we're not piping output check if we're writing to a file
+        } else if(inputRedirect != 0){
+            dup2(outputRedirect, 1);
+            //todo check this
+            close(outputRedirect);
         }
 
 
@@ -45,7 +49,20 @@ void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
             close(prevInputPipe);
             close(prevOutputPipe);
 
+            //if we're not piping input check if we're getting input from a file
+        } else if(outputRedirect != 0){
+            dup2(outputRedirect, 0);
+            //todo check this
+            close(outputRedirect);
         }
+
+        //check if we're redirecting the error output
+        if (errorRedirect != 0){
+            dup2(errorRedirect, 2);
+            //todo check this
+            close(errorRedirect);
+        }
+
 
         //execute program
         execvp((*pArgs.begin()).c_str(), argv);
