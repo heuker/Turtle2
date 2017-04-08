@@ -92,6 +92,11 @@ antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProg
     inBackground = context->background != nullptr;
 
     //visit children
+    for (vector<ShellGrammarParser::ExecuteProgramContext *>::iterator it = context->E.begin();
+         it != context->startProgram().end(); ++it)
+    {
+        visitExecuteProgram(*it);
+    }
     visitChildren(context);
     return nullptr;
 }
@@ -101,25 +106,25 @@ antlrcpp::Any TurtleVisitor::visitArgument(ShellGrammarParser::ArgumentContext *
 }
 
 antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectContext *context) {
-    const string op = context->op->getText();
-    const string filename = context->fileName->getText();
-    int fileDescriptor;
+    string op(context->op->getText());
+    string filename = context->fileName->getText();
+    pair<string,int> returnPair;
 
     if (op == ">")
     {
-        fileDescriptor = open((const char *) filename[0], O_WRONLY);
+        returnPair = make_pair<string,int>(context->op->getText(), open(&filename[0], O_WRONLY));
     } else if (op == ">>")
     {
-        fileDescriptor = open((const char *) filename[0], O_WRONLY);
+        returnPair = make_pair<string,int>(context->op->getText(), open(&filename[0], O_WRONLY));
     } else if (op == "2>")
     {
-        fileDescriptor = open((const char *) filename[0], O_APPEND);
+        returnPair = make_pair<string,int>(context->op->getText(), open(&filename[0], O_APPEND));
     } else if (op == "<")
     {
-        fileDescriptor = open((const char *) filename[0], O_RDONLY);
+        returnPair = make_pair<string,int>(context->op->getText(), open(&filename[0], O_RDONLY));
     }
 
-    return nullptr;
+    return returnPair;
 }
 
 TurtleVisitor::~TurtleVisitor() {
