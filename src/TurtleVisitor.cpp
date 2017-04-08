@@ -90,7 +90,6 @@ antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramC
 
         if (pair.first == ">" || pair.first == ">>")
         {
-            cout << pair.second << endl;
             output = pair.second;
         } else if (pair.first == "2>")
         {
@@ -109,7 +108,6 @@ antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramC
     } else {
         model->addProgramExecute(new ProgramExecute(args, inBackground, 0, 0, input, output, err));
     }
-    cout << output;
 
     //change inBackground
     inBackground = context->background != nullptr;
