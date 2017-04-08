@@ -22,9 +22,9 @@ void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
 
         //transfer all arguments
         for (std::vector<std::string>::iterator it = pArgs.begin(); it != pArgs.end(); ++it) {
-            std::string temp = *it;
+//            std::string temp = *it; todo remove
 
-            argv[i] = (char *) temp.c_str();
+            argv[i] = (char *) (*it).c_str();
             ++i;
         }
 

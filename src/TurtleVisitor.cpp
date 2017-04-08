@@ -7,7 +7,10 @@
 #include <cstring>
 #include "TurtleVisitor.h"
 
-
+/**
+ * Gets the working directory of the program
+ * @return cwd of program
+ */
 string TurtleVisitor::getCwd() {
     char buff[PATH_MAX];
     getcwd(buff, PATH_MAX);
@@ -60,7 +63,6 @@ antlrcpp::Any TurtleVisitor::visitChangeWorkingDirectory(ShellGrammarParser::Cha
     //update workingDirectory
     workingDirectory = getCwd();
     return nullptr;
-
 }
 
 
