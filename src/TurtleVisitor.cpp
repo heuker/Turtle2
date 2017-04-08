@@ -66,7 +66,7 @@ antlrcpp::Any TurtleVisitor::visitChangeWorkingDirectory(ShellGrammarParser::Cha
     return nullptr;
 }
 
-antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProgramContext *context) {
+antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramContext *context) {
     vector<string> args;
     //push programName to the first parameter in argument list
     args.push_back(context->program->getText());
@@ -78,6 +78,8 @@ antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProg
         string arg = visitArgument(*it);
         args.push_back(arg);
     }
+
+    //todo visit IoRedirect here
 
     //see wheter we have to make a pipe or not
     if (context->startProgram().size() != 0){
@@ -91,13 +93,12 @@ antlrcpp::Any TurtleVisitor::visitExecuteProgram(ShellGrammarParser::ExecuteProg
     //change inBackground
     inBackground = context->background != nullptr;
 
-    //visit children
-    for (vector<ShellGrammarParser::ExecuteProgramContext *>::iterator it = context->E.begin();
+    //visit programs piped to
+    for (vector<ShellGrammarParser::StartProgramContext *>::iterator it = context->startProgram().begin();
          it != context->startProgram().end(); ++it)
     {
-        visitExecuteProgram(*it);
+        visitStartProgram(*it);
     }
-    visitChildren(context);
     return nullptr;
 }
 

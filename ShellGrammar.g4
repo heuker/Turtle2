@@ -8,7 +8,7 @@ buildIns
         ;
 
 startProgram
-        : program=STRING (argument| iORedirect | '|' startProgram (background='&')? )*  #executeProgram
+        : program=STRING (argument| iORedirect | '|' startProgram (background='&')? )*
         ;
 
 argument
