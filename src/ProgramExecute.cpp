@@ -66,7 +66,25 @@ int ProgramExecute::getOutputPipe() const {
     return outputPipe;
 }
 
+int ProgramExecute::getInputRedirect() const {
+    return inputRedirect;
+}
+
+int ProgramExecute::getOutputRedirect() const {
+    return outputRedirect;
+}
+
+int ProgramExecute::getErrorRedirect() const {
+    return errorRedirect;
+}
+
 ProgramExecute::ProgramExecute(const std::vector<std::string> &args, bool inBackGround, int inputPipe, int outputPipe,
-                               const std::string &inputRedirect, const std::string &outputRedirect,
-                               const std::string &errorRedirect)
-        : args(args), inBackGround(inBackGround), inputPipe(inputPipe), outputPipe(outputPipe), inputRedirect(inputRedirect), outputRedirect(outputRedirect), errorRedirect(errorRedirect) {}
+                               int inputRedirect, int outputRedirect, int errorRedirect) : args(args),
+                                                                                           inBackGround(inBackGround),
+                                                                                           inputPipe(inputPipe),
+                                                                                           outputPipe(outputPipe),
+                                                                                           inputRedirect(inputRedirect),
+                                                                                           outputRedirect(
+                                                                                                   outputRedirect),
+                                                                                           errorRedirect(
+                                                                                                   errorRedirect) {}
