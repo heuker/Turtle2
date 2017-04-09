@@ -18,7 +18,7 @@ public:
     //default destructor
     ~ProgramExecute() {}
 
-    void execute(int prevInPartOfPipe, int prevOutOfPipe);
+    void execute(int prevOutPartOfPipe, int prevInPartOfPipe);
 
     const std::vector<std::string> &getArgs() const {
         return args;

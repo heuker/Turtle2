@@ -7,7 +7,7 @@
 #include <iostream>
 #include "ProgramExecute.h"
 
-void ProgramExecute::execute(int prevInPartOfPipe, int prevOutOfPipe) {
+void ProgramExecute::execute(int prevOutPartOfPipe, int prevInPartOfPipe) {
     int returnValues;
     int cid = fork();
     if (cid == 0) { //child
@@ -49,10 +49,10 @@ void ProgramExecute::execute(int prevInPartOfPipe, int prevOutOfPipe) {
 
 
         //if we're piping input
-        if (prevInPartOfPipe != 0) {
-            dup2(prevInPartOfPipe, 0);
+        if (prevOutPartOfPipe != 0) {
+            dup2(prevOutPartOfPipe, 0);
+            close(prevOutPartOfPipe);
             close(prevInPartOfPipe);
-            close(prevOutOfPipe);
 
             //if we're not piping input check if we're getting input from a file
         } else if(inputRedirect != 0){
