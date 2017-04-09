@@ -129,20 +129,20 @@ antlrcpp::Any TurtleVisitor::visitArgument(ShellGrammarParser::ArgumentContext *
 antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectContext *context) {
     string op(context->op->getText());
     string filename = context->fileName->getText();
-    pair<string,int> returnPair;
+    pair<string, int> returnPair;
 
     if (op == ">")
     {
-        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC));
+        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666));
     } else if (op == ">>")
     {
-        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_APPEND | O_CREAT));
+        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_APPEND, 0666));
     } else if (op == "2>")
     {
-        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC));
+        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666));
     } else if (op == "<")
     {
-        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_RDONLY));
+        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_RDONLY, 0666));
     }
 
     return returnPair;
