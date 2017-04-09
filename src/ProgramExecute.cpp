@@ -88,25 +88,7 @@ int ProgramExecute::getInPartOfPipe() const {
     return inPartOfPipe;
 }
 
-int ProgramExecute::getInputRedirect() const {
-    return inputRedirect;
-}
-
-int ProgramExecute::getOutputRedirect() const {
-    return outputRedirect;
-}
-
-int ProgramExecute::getErrorRedirect() const {
-    return errorRedirect;
-}
-
 ProgramExecute::ProgramExecute(const std::vector<std::string> &args, bool inBackGround, int inputPipe, int outputPipe,
-                               int inputRedirect, int outputRedirect, int errorRedirect) : args(args),
-                                                                                           inBackGround(inBackGround),
-                                                                                           outPartOfPipe(inputPipe),
-                                                                                           inPartOfPipe(outputPipe),
-                                                                                           inputRedirect(inputRedirect),
-                                                                                           outputRedirect(
-                                                                                                   outputRedirect),
-                                                                                           errorRedirect(
-                                                                                                   errorRedirect) {}
+                               int inputRedirect, int outputRedirect, int errorRedirect)
+        : args(args), inBackGround(inBackGround), outPartOfPipe(inputPipe), inPartOfPipe(outputPipe),
+          inputRedirect(inputRedirect), outputRedirect(outputRedirect), errorRedirect(errorRedirect) {}

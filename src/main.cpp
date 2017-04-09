@@ -2,9 +2,6 @@
 #include <ANTLRInputStream.h>
 #include <CommonTokenStream.h>
 #include <tree/ParseTree.h>
-#include <unistd.h>
-#include <wait.h>
-#include <vector>
 #include "../gen/ShellGrammarLexer.h"
 #include "../gen/ShellGrammarParser.h"
 #include "TurtleVisitor.h"

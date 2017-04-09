@@ -7,7 +7,6 @@
 
 #include <string>
 #include <vector>
-#include "Pipe.h"
 
 class ProgramExecute {
 public:
@@ -27,12 +26,6 @@ public:
     int getOutPartOfPipe() const;
 
     int getInPartOfPipe() const;
-
-    int getInputRedirect() const;
-
-    int getOutputRedirect() const;
-
-    int getErrorRedirect() const;
 
 private:
     std::vector<std::string> args;
