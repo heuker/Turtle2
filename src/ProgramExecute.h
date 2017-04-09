@@ -18,15 +18,15 @@ public:
     //default destructor
     ~ProgramExecute() {}
 
-    void execute(int prevInputPipe, int prevOutputPipe);
+    void execute(int prevInPartOfPipe, int prevOutOfPipe);
 
     const std::vector<std::string> &getArgs() const {
         return args;
     }
 
-    int getInputPipe() const;
+    int getOutPartOfPipe() const;
 
-    int getOutputPipe() const;
+    int getInPartOfPipe() const;
 
     int getInputRedirect() const;
 
@@ -39,8 +39,8 @@ private:
 
     bool inBackGround;
 
-    int inputPipe;
-    int outputPipe;
+    int outPartOfPipe;
+    int inPartOfPipe;
 
     int inputRedirect;
     int outputRedirect;

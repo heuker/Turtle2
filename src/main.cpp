@@ -34,15 +34,15 @@ int main() {
 
         std::vector<ProgramExecute *> commands = model->getProgramExecutes();
 
-        int prevIn = 0;
-        int prevOut = 0;
+        int prevInPartOfPipe = 0;
+        int prevOutOfPipe = 0;
 
         for (std::vector<ProgramExecute *>::iterator it = commands.begin(); it != commands.end(); ++it) {
             ProgramExecute *p = *it;
-            p->execute(prevIn, prevOut);
+            p->execute(prevInPartOfPipe, prevOutOfPipe);
 
-            prevIn = p->getInputPipe();
-            prevOut = p->getOutputPipe();
+            prevInPartOfPipe = p->getOutPartOfPipe();
+            prevOutOfPipe = p->getInPartOfPipe();
         }
 
         //delete model

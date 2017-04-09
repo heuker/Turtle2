@@ -7,7 +7,7 @@
 #include <iostream>
 #include "ProgramExecute.h"
 
-void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
+void ProgramExecute::execute(int prevInPartOfPipe, int prevOutOfPipe) {
     int returnValues;
     int cid = fork();
     if (cid == 0) { //child
@@ -26,17 +26,22 @@ void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
             ++i;
         }
 
+        std::cout << "in: " << inputRedirect << std::endl;
+        std::cout << "out: " << outputRedirect << std::endl;
+        std::cout << "errr: " << errorRedirect << std::endl;
+
         //add NULL to last index of the char array
         argv[pArgs.size()] = NULL;
 
-        //if we're piping output
-        if (inputPipe != 0) {
-            dup2(outputPipe, 1);
-            close(inputPipe);
-            close(outputPipe);
+        //if we're piping output to the inPart of the pipe
+        if (inPartOfPipe != 0) {
+            dup2(inPartOfPipe, 1);
+            close(outPartOfPipe);
+            close(inPartOfPipe);
 
             //if we're not piping output check if we're writing to a file
-        } else if(inputRedirect != 0){
+        } else if(outputRedirect != 0){
+            std::cout << "This is an out file test." << std::endl;
             dup2(outputRedirect, 1);
             //todo check this
             close(outputRedirect);
@@ -44,16 +49,16 @@ void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
 
 
         //if we're piping input
-        if (prevInputPipe != 0) {
-            dup2(prevInputPipe, 0);
-            close(prevInputPipe);
-            close(prevOutputPipe);
+        if (prevInPartOfPipe != 0) {
+            dup2(prevInPartOfPipe, 0);
+            close(prevInPartOfPipe);
+            close(prevOutOfPipe);
 
             //if we're not piping input check if we're getting input from a file
-        } else if(outputRedirect != 0){
-            dup2(outputRedirect, 0);
+        } else if(inputRedirect != 0){
+            dup2(inputRedirect, 0);
             //todo check this
-            close(outputRedirect);
+            close(inputRedirect);
         }
 
         //check if we're redirecting the error output
@@ -67,7 +72,7 @@ void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
         //execute program
         execvp((*pArgs.begin()).c_str(), argv);
     } else { //parent
-        if (inputPipe == 0) {
+        if (outPartOfPipe == 0) {
             if (!inBackGround) {
                 waitpid(0, &returnValues, 0);
             }
@@ -75,12 +80,12 @@ void ProgramExecute::execute(int prevInputPipe, int prevOutputPipe) {
     }
 }
 
-int ProgramExecute::getInputPipe() const {
-    return inputPipe;
+int ProgramExecute::getOutPartOfPipe() const {
+    return outPartOfPipe;
 }
 
-int ProgramExecute::getOutputPipe() const {
-    return outputPipe;
+int ProgramExecute::getInPartOfPipe() const {
+    return inPartOfPipe;
 }
 
 int ProgramExecute::getInputRedirect() const {
@@ -98,8 +103,8 @@ int ProgramExecute::getErrorRedirect() const {
 ProgramExecute::ProgramExecute(const std::vector<std::string> &args, bool inBackGround, int inputPipe, int outputPipe,
                                int inputRedirect, int outputRedirect, int errorRedirect) : args(args),
                                                                                            inBackGround(inBackGround),
-                                                                                           inputPipe(inputPipe),
-                                                                                           outputPipe(outputPipe),
+                                                                                           outPartOfPipe(inputPipe),
+                                                                                           inPartOfPipe(outputPipe),
                                                                                            inputRedirect(inputRedirect),
                                                                                            outputRedirect(
                                                                                                    outputRedirect),
