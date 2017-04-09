@@ -79,14 +79,18 @@ antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramC
         args.push_back(arg);
     }
 
-    //todo visit IoRedirect here
+    //default values of I/O redirects
     int input = 0, output = 0, err = 0;
     pair<string, int> pair;
+
+    //get all I/O redirects for this command and visit them
     vector<ShellGrammarParser::IORedirectContext *> ioRedirectVector = context->iORedirect();
     for (vector<ShellGrammarParser::IORedirectContext *>::iterator it = ioRedirectVector.begin();
          it != ioRedirectVector.end(); ++it) {
+
         pair = visitIORedirect(*it);
 
+        //load file descriptor in correct variable
         if (pair.first == ">" || pair.first == ">>") {
             output = pair.second;
         } else if (pair.first == "2>") {
@@ -98,11 +102,15 @@ antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramC
 
     //see wheter we have to make a pipe or not
     if (context->startProgram().size() != 0) {
+        //make new pipe
         int p[2];
         pipe(p);
-        model->addProgramExecute(new ProgramExecute(args, inBackground, p[0], p[1], input, output, err));
+
+        //add new command with pipe
+        model->addCommand(new Command(args, inBackground, p[0], p[1], input, output, err));
     } else {
-        model->addProgramExecute(new ProgramExecute(args, inBackground, 0, 0, input, output, err));
+        //add new command without pipe
+        model->addCommand(new Command(args, inBackground, 0, 0, input, output, err));
     }
 
     //change inBackground
@@ -114,18 +122,25 @@ antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramC
          it != startProgramVector.end(); ++it) {
         visitStartProgram(*it);
     }
+
+    //return
     return nullptr;
 }
 
 antlrcpp::Any TurtleVisitor::visitArgument(ShellGrammarParser::ArgumentContext *context) {
+    //return the argument
     return context->getText();
 }
 
 antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectContext *context) {
+    //get operator
     string op(context->op->getText());
-    string filename = context->fileName->getText();
-    pair<string, int> returnPair;
 
+    //get filename
+    string filename = context->fileName->getText();
+
+    //make a new pair depending on operator, open file with fitting permissions
+    pair<string, int> returnPair;
     if (op == ">") {
         returnPair = make_pair<string, int>(context->op->getText(),
                                             open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666));
@@ -138,9 +153,9 @@ antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectConte
         returnPair = make_pair<string, int>(context->op->getText(), open(filename.c_str(), O_RDONLY, 0666));
     }
 
+    //return the made pair
     return returnPair;
 }
 
-TurtleVisitor::~TurtleVisitor() {
-
-}
+//destructor
+TurtleVisitor::~TurtleVisitor() {}

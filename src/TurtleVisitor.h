@@ -11,15 +11,23 @@
 
 using namespace std;
 
-class TurtleVisitor : public ShellGrammarVisitor{
+class TurtleVisitor : public ShellGrammarVisitor {
 public:
     TurtleVisitor()
-    : workingDirectory(getCwd()), inBackground(false){};
+            : workingDirectory(getCwd()), inBackground(false) {};
 
 private:
-    Model* model;
+    Model *model;
 
 public:
+    //desctructor
+    virtual ~TurtleVisitor();
+
+    //method that gets working directory of proces
+    string getCwd();
+
+
+    //overrided visits
     antlrcpp::Any visitStart(ShellGrammarParser::StartContext *context) override;
 
     antlrcpp::Any visitGetWorkingDirectory(ShellGrammarParser::GetWorkingDirectoryContext *context) override;
@@ -30,15 +38,13 @@ public:
 
     antlrcpp::Any visitIORedirect(ShellGrammarParser::IORedirectContext *context) override;
 
-    virtual ~TurtleVisitor();
-
-    string getCwd();
-
     antlrcpp::Any visitArgument(ShellGrammarParser::ArgumentContext *context) override;
 
 private:
+    //working directory
     string workingDirectory;
 
+    //bool needed for building a command
     bool inBackground;
 };
 

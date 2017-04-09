@@ -7,34 +7,35 @@
 
 
 #include <vector>
-#include "ProgramExecute.h"
+#include "Command.h"
 
 class Model {
 public:
     //constructor
-    Model()
-    {}
+    Model() {}
 
     //destructor
-    ~Model(){
+    ~Model() {
 
         //remove every programExecute
-        for (std::vector<ProgramExecute*>::iterator it = programExecutes.begin(); it != programExecutes.end(); ++it) {
+        for (std::vector<Command *>::iterator it = commands.begin(); it != commands.end(); ++it) {
             delete *it;
         }
     }
 
 private:
-    //vector filled with all programExecutes
-    std::vector<ProgramExecute*> programExecutes;
+    //vector filled with all commands
+    std::vector<Command *> commands;
 
 public:
-    void addProgramExecute(ProgramExecute* programExecute){
-        programExecutes.push_back(programExecute);
+    //adder
+    void addCommand(Command *programExecute) {
+        commands.push_back(programExecute);
     };
 
-    const std::vector<ProgramExecute*> &getProgramExecutes() const{
-        return programExecutes;
+    //getter
+    const std::vector<Command *> &getCommands() const {
+        return commands;
     };
 
 };

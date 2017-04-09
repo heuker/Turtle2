@@ -29,13 +29,16 @@ int main() {
         // Then, visit your tree
         Model *model = visitor->visit(parseTree);
 
-        std::vector<ProgramExecute *> commands = model->getProgramExecutes();
+        //get all commands from the model
+        std::vector<Command *> commands = model->getCommands();
 
+        //set defaults to 0
         int prevOutPartOfPipe = 0;
         int prevInPartOfPipe = 0;
 
-        for (std::vector<ProgramExecute *>::iterator it = commands.begin(); it != commands.end(); ++it) {
-            ProgramExecute *p = *it;
+        //loop over all commands executing them
+        for (std::vector<Command *>::iterator it = commands.begin(); it != commands.end(); ++it) {
+            Command *p = *it;
             p->execute(prevOutPartOfPipe, prevInPartOfPipe);
 
             prevOutPartOfPipe = p->getOutPartOfPipe();
@@ -46,6 +49,7 @@ int main() {
         delete model;
     }
 
+    //delete visitor
     delete visitor;
 
     //return

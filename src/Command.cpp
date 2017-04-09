@@ -1,15 +1,24 @@
 //
-// Created by sander on 4-4-17.
+// Command class
 //
 
 #include <unistd.h>
 #include <wait.h>
 #include <iostream>
-#include "ProgramExecute.h"
+#include <cstring>
+#include "Command.h"
 
-void ProgramExecute::execute(int prevOutPartOfPipe, int prevInPartOfPipe) {
+/**
+ * Executes this command
+ * @param prevOutPartOfPipe outPartOfPipe of previous command default 0
+ * @param prevInPartOfPipe inPartOfPipe of previous command default 0
+ */
+void Command::execute(int prevOutPartOfPipe, int prevInPartOfPipe) {
     int returnValues;
+
+    //fork new proces, let child run execvp
     int cid = fork();
+
     if (cid == 0) { //child
         //get arguments
         std::vector<std::string> pArgs = getArgs();
@@ -38,7 +47,7 @@ void ProgramExecute::execute(int prevOutPartOfPipe, int prevInPartOfPipe) {
             close(inPartOfPipe);
 
             //if we're not piping output check if we're writing to a file
-        } else if(outputRedirect != 0){
+        } else if (outputRedirect != 0) {
             dup2(outputRedirect, 1);
 
             //no longer needed
@@ -55,7 +64,7 @@ void ProgramExecute::execute(int prevOutPartOfPipe, int prevInPartOfPipe) {
             close(prevInPartOfPipe);
 
             //if we're not piping input check if we're getting input from a file
-        } else if(inputRedirect != 0){
+        } else if (inputRedirect != 0) {
             dup2(inputRedirect, 0);
 
             //no longer needed
@@ -63,7 +72,7 @@ void ProgramExecute::execute(int prevOutPartOfPipe, int prevInPartOfPipe) {
         }
 
         //check if we're redirecting the error output
-        if (errorRedirect != 0){
+        if (errorRedirect != 0) {
             dup2(errorRedirect, 2);
 
             //no longer needed
@@ -75,22 +84,27 @@ void ProgramExecute::execute(int prevOutPartOfPipe, int prevInPartOfPipe) {
 
     } else { //parent
         if (outPartOfPipe == 0) {
+            //if not inbackground command
             if (!inBackGround) {
+                //wait on child
                 waitpid(0, &returnValues, 0);
             }
         }
     }
 }
 
-int ProgramExecute::getOutPartOfPipe() const {
+
+//getters
+int Command::getOutPartOfPipe() const {
     return outPartOfPipe;
 }
 
-int ProgramExecute::getInPartOfPipe() const {
+int Command::getInPartOfPipe() const {
     return inPartOfPipe;
 }
 
-ProgramExecute::ProgramExecute(const std::vector<std::string> &args, bool inBackGround, int inputPipe, int outputPipe,
-                               int inputRedirect, int outputRedirect, int errorRedirect)
+//constructor
+Command::Command(const std::vector<std::string> &args, bool inBackGround, int inputPipe, int outputPipe,
+                 int inputRedirect, int outputRedirect, int errorRedirect)
         : args(args), inBackGround(inBackGround), outPartOfPipe(inputPipe), inPartOfPipe(outputPipe),
           inputRedirect(inputRedirect), outputRedirect(outputRedirect), errorRedirect(errorRedirect) {}

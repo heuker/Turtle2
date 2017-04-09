@@ -1,5 +1,5 @@
 //
-// Created by sander on 4-4-17.
+// Command class
 //
 
 #ifndef TURTLE_PROGRAM_H
@@ -8,17 +8,21 @@
 #include <string>
 #include <vector>
 
-class ProgramExecute {
+class Command {
 public:
-    ProgramExecute(const std::vector<std::string> &args, bool inBackGround, int inputPipe, int outputPipe,
-                   int inputRedirect, int outputRedirect, int errorRedirect);
+    //constructor
+    Command(const std::vector<std::string> &args, bool inBackGround, int inputPipe, int outputPipe,
+            int inputRedirect, int outputRedirect, int errorRedirect);
 
 
     //default destructor
-    ~ProgramExecute() {}
+    ~Command() {}
 
+    //executes the command
     void execute(int prevOutPartOfPipe, int prevInPartOfPipe);
 
+
+    //gettters
     const std::vector<std::string> &getArgs() const {
         return args;
     }
@@ -28,6 +32,7 @@ public:
     int getInPartOfPipe() const;
 
 private:
+    //list of arguments
     std::vector<std::string> args;
 
     bool inBackGround;
