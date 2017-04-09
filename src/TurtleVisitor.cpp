@@ -71,7 +71,7 @@ antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramC
     //push programName to the first parameter in argument list
     args.push_back(context->program->getText());
 
-    vector<ShellGrammarParser::ArgumentContext*> arguments = context->argument();
+    vector<ShellGrammarParser::ArgumentContext *> arguments = context->argument();
 
     //push every parameter to argument list
     for (vector<ShellGrammarParser::ArgumentContext *>::iterator it = arguments.begin(); it != arguments.end(); ++it) {
@@ -81,27 +81,23 @@ antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramC
 
     //todo visit IoRedirect here
     int input = 0, output = 0, err = 0;
-    pair<string,int> pair;
+    pair<string, int> pair;
     vector<ShellGrammarParser::IORedirectContext *> ioRedirectVector = context->iORedirect();
     for (vector<ShellGrammarParser::IORedirectContext *>::iterator it = ioRedirectVector.begin();
-            it != ioRedirectVector.end(); ++it)
-    {
+         it != ioRedirectVector.end(); ++it) {
         pair = visitIORedirect(*it);
 
-        if (pair.first == ">" || pair.first == ">>")
-        {
+        if (pair.first == ">" || pair.first == ">>") {
             output = pair.second;
-        } else if (pair.first == "2>")
-        {
+        } else if (pair.first == "2>") {
             err = pair.second;
-        } else if (pair.first == "<")
-        {
+        } else if (pair.first == "<") {
             input = pair.second;
         }
     }
 
     //see wheter we have to make a pipe or not
-    if (context->startProgram().size() != 0){
+    if (context->startProgram().size() != 0) {
         int p[2];
         pipe(p);
         model->addProgramExecute(new ProgramExecute(args, inBackground, p[0], p[1], input, output, err));
@@ -115,8 +111,7 @@ antlrcpp::Any TurtleVisitor::visitStartProgram(ShellGrammarParser::StartProgramC
     //visit programs piped to
     vector<ShellGrammarParser::StartProgramContext *> startProgramVector = context->startProgram();
     for (vector<ShellGrammarParser::StartProgramContext *>::iterator it = startProgramVector.begin();
-         it != startProgramVector.end(); ++it)
-    {
+         it != startProgramVector.end(); ++it) {
         visitStartProgram(*it);
     }
     return nullptr;
@@ -131,18 +126,16 @@ antlrcpp::Any TurtleVisitor::visitIORedirect(ShellGrammarParser::IORedirectConte
     string filename = context->fileName->getText();
     pair<string, int> returnPair;
 
-    if (op == ">")
-    {
-        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666));
-    } else if (op == ">>")
-    {
-        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_APPEND, 0666));
-    } else if (op == "2>")
-    {
-        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666));
-    } else if (op == "<")
-    {
-        returnPair = make_pair<string,int>(context->op->getText(), open(filename.c_str(), O_RDONLY, 0666));
+    if (op == ">") {
+        returnPair = make_pair<string, int>(context->op->getText(),
+                                            open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666));
+    } else if (op == ">>") {
+        returnPair = make_pair<string, int>(context->op->getText(), open(filename.c_str(), O_WRONLY | O_APPEND, 0666));
+    } else if (op == "2>") {
+        returnPair = make_pair<string, int>(context->op->getText(),
+                                            open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666));
+    } else if (op == "<") {
+        returnPair = make_pair<string, int>(context->op->getText(), open(filename.c_str(), O_RDONLY, 0666));
     }
 
     return returnPair;

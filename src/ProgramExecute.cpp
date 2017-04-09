@@ -26,24 +26,22 @@ void ProgramExecute::execute(int prevOutPartOfPipe, int prevInPartOfPipe) {
             ++i;
         }
 
-        std::cout << "in: " << inputRedirect << std::endl;
-        std::cout << "out: " << outputRedirect << std::endl;
-        std::cout << "errr: " << errorRedirect << std::endl;
-
         //add NULL to last index of the char array
         argv[pArgs.size()] = NULL;
 
         //if we're piping output to the inPart of the pipe
         if (inPartOfPipe != 0) {
             dup2(inPartOfPipe, 1);
+
+            //no longer needed
             close(outPartOfPipe);
             close(inPartOfPipe);
 
             //if we're not piping output check if we're writing to a file
         } else if(outputRedirect != 0){
-            std::cout << "This is an out file test." << std::endl;
             dup2(outputRedirect, 1);
-            //todo check this
+
+            //no longer needed
             close(outputRedirect);
         }
 
@@ -51,26 +49,30 @@ void ProgramExecute::execute(int prevOutPartOfPipe, int prevInPartOfPipe) {
         //if we're piping input
         if (prevOutPartOfPipe != 0) {
             dup2(prevOutPartOfPipe, 0);
+
+            //no longer needed
             close(prevOutPartOfPipe);
             close(prevInPartOfPipe);
 
             //if we're not piping input check if we're getting input from a file
         } else if(inputRedirect != 0){
             dup2(inputRedirect, 0);
-            //todo check this
+
+            //no longer needed
             close(inputRedirect);
         }
 
         //check if we're redirecting the error output
         if (errorRedirect != 0){
             dup2(errorRedirect, 2);
-            //todo check this
+
+            //no longer needed
             close(errorRedirect);
         }
 
-
         //execute program
         execvp((*pArgs.begin()).c_str(), argv);
+
     } else { //parent
         if (outPartOfPipe == 0) {
             if (!inBackGround) {
